@@ -1,0 +1,11 @@
+<% layout('boilerplate') -%>
+<% script('foo.js') -%>
+<% stylesheet('foo.css') -%>
+<h1>I am the <%=what%> template</h1>
+<p class="better-than-dead">I'm red if foo.css was loaded.</p>
+<p>Here are some muppets we know about:<ul>
+	<%-partial('muppet',muppets) %>
+</ul></p>
+<% include extra %>
+<% block('header', "<p>I'm in the header.</p>") -%>
+<% block('footer', "<p>I'm in the footer.</p>") -%>

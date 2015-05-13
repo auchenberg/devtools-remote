@@ -1,0 +1,4 @@
+.git*
+test/
+Makefile
+.DS_Store
