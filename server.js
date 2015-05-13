@@ -66,17 +66,17 @@ io.sockets.on('connection', function (socket) {
   socket.on('hello', function (data) {
     logger.info('socket.hello', data)
 
-    var webSocketUrl = 'ws://' + (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id;
+    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id;
 
     targets[socket.id] = {
       description: '',
-      devtoolsFrontendUrl: '/devtools/devtools.html?' + webSocketUrl,
-      devtoolsUrl: 'chrome-devtools://devtools/bundled/devtools.html?' + webSocketUrl,
+      devtoolsFrontendUrl: '/devtools/devtools.html?ws=' + webSocketUrl,
+      devtoolsUrl: 'chrome-devtools://devtools/bundled/devtools.html?ws=' + webSocketUrl,
       id: socket.id,
       title: data.title,
       type: 'page',
       url: data.url,
-      webSocketDebuggerUrl: webSocketUrl
+      webSocketDebuggerUrl: 'ws://' + webSocketUrl
     }
   })
 })
