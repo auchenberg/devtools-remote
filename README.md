@@ -9,7 +9,11 @@ Debug your users browser remotely via Chrome DevTools.
 This is an example of how [browser remote debugging](https://remotedebug.org) can be used to help customers having problems by enabling support agents to remote debug their browser.
 
 ### How to get started?
-To get started to need to have three pieces going: The first is a little "gateway" that acts like a proxy between Chrome and Chrome DevTools. Secondly the user who need support need to install a little extension, and finally the  agent need to open the dashboard.
+To get started to need to have three pieces going: 
+
+1. A simple gateway that acts like a proxy between Chrome and Chrome DevTools.
+2. The user need to install a little extension to allow access to Chrome debugger, and to connect to the gateway.
+3. The agent needs to open the dashboard to connect Chrome DevTools to the user.
 
 #### Gateway
 1. Run ``npm install``
