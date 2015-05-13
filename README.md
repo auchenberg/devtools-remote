@@ -27,4 +27,4 @@ To get started to need to have three pieces going: The first is a little "gatewa
 4. Bam! 
 
 
-This project is highly experimental.
+**NOTICE**: This project is highly experimental, and shouldn't be used in ANY production-like environment, as there's absolutely no security or privacy. 
