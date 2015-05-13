@@ -18,7 +18,7 @@ app.set('port', process.env.PORT || 8000)
 app.get('/', function (req, res) {
   logger.info('http.index')
   res.json({
-    msg: 'RemoteDebug Support Gateway'
+    msg: 'BrowserRemote Gateway'
   })
 })
 
