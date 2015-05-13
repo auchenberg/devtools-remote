@@ -41,7 +41,6 @@ server.listen(app.get('port'), function () {
   logger.info('- listening on port %d in %s mode', app.get('port'), app.settings.env)
 })
 
-
 // Socket IO for Chrome Extension
 logger.info('socket.booting')
 
@@ -66,7 +65,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('hello', function (data) {
     logger.info('socket.hello', data)
 
-    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id;
+    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id
 
     targets[socket.id] = {
       description: '',
