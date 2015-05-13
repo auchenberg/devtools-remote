@@ -56,6 +56,11 @@
         })
       })
 
+      chrome.debugger.onDetach.addListener(function(debuggee, reason) {
+        console.log('debugger.detached', reason)
+        socket.disconnect();
+      })
+
     }
 
   })
