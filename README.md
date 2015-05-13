@@ -1,10 +1,9 @@
 BrowserRemote.
 ================
 
-Debug your users browser remotely via Chrome DevTools.
+Debug your user's browser remotely via Chrome DevTools.
 
 ![Logo](https://github.com/auchenberg/browser-remote/raw/master/explainer.png)
-
 
 This is an example of how [browser remote debugging](https://remotedebug.org) can be used to help customers having problems by enabling support agents to remote debug their browser.
 
@@ -25,7 +24,7 @@ To get started to need to have three pieces going:
 5. Click "I need help"
 
 #### Agent
-1. Open `https://localhost:8000/json``
+1. Open ``https://localhost:8000/json``
 2. Find the ``devtoolsUrl`` property for the connected client
 3. Open the ``devtoolsUrl`` url in Chrome
 4. Bam! 
