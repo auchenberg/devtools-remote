@@ -1,5 +1,5 @@
 {
-  "name": "remotedebug-support",
+  "name": "browser-remote",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
