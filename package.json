@@ -5,10 +5,13 @@
   "main": "server.js",
   "scripts": {
     "main": "server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "author": "",
   "license": "MIT",
+  "devDependencies": {
+    "standard": "^3.0.0"
+  },
   "dependencies": {
     "express": "^4.12.3",
     "socket.io": "^1.3.5",

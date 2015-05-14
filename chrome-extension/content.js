@@ -1,5 +1,6 @@
-(function () {
+/* global chrome */
 
+(function () {
   document.addEventListener('window.remoteDebug.requestAccess', function (e) {
     chrome.runtime.sendMessage({
       cmd: 'attach'
@@ -10,7 +11,7 @@
   s.textContent = '(' + function () {
     window.remoteDebug = {}
     window.remoteDebug.requestAccess = function (requester) {
-      if (window.confirm('Do you want to allow ' + requester + ' to remote debug this tab?')) {
+      if (window.confirm('Do you want to allow ' + requester + ' to remote debug this tab?')) { // eslint-disable-line no-alert
 
         var evt = document.createEvent('CustomEvent')
         evt.initCustomEvent('window.remoteDebug.requestAccess', true, true)
