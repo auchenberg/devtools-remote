@@ -51,16 +51,6 @@
           return
         }
 
-        if (data.method === 'Page.startScreencast') {
-          startScrencasting()
-          return
-        }
-
-        if (data.method === 'Page.stopScreencast') {
-          stopScrencasting()
-          return
-        }
-
         chrome.debugger.sendCommand(debuggee, data.method, data.params, function (response) {
           console.log('debugger.command.sent', data.id, response)
 
@@ -87,53 +77,6 @@
         socket.disconnect()
       })
 
-      // Screencasting
-      var captureFrame = function () {
-        return new Promise(function (resolve, reject) {
-          chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 30 }, function (dataURI) {
-            if (dataURI) {
-              var url = dataURI.replace('data:image/jpeg;base64,', '')
-              resolve(url)
-            } else {
-              reject()
-            }
-          })
-        })
-      }
-
-      var captureScreencastFrame = function () {
-        captureFrame().then(function (frameUrl) {
-          var reply = {
-            method: 'Page.screencastFrame',
-            params: {
-              data: frameUrl,
-              metadata: {
-                pageScaleFactor: 1,
-                offsetTop: 0,
-                deviceWidth: tab.width,
-                deviceHeight: tab.height,
-                scrollOffsetX: 0,
-                scrollOffsetY: 0
-              }
-            }
-          }
-
-          socket.emit('data.response', reply)
-        })
-      }
-
-      var stopScrencasting = function () {
-        if (screncastingInterval) {
-          clearInterval(screncastingInterval)
-        }
-      }
-
-      var startScrencasting = function () {
-        screncastingInterval = setInterval(captureScreencastFrame, 1000)
-      }
-
     }
-
   })
-
 })()
