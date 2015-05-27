@@ -8,7 +8,7 @@
     var tab = sender.tab
     var screncastingInterval = null
 
-    if (message.cmd === 'attach') {
+    if (message.cmd === 'requestDebugSocket') {
       console.log('debugger.attach', tab)
 
       var debuggee = {
@@ -19,8 +19,8 @@
         console.log('debugger.attached')
       })
 
-      var socket = io.connect('http://localhost:8000/')
-      // var socket = io.connect('https://browserremote.herokuapp.com/')
+      // var socket = io.connect('http://localhost:8000/')
+      var socket = io.connect('https://browserremote.herokuapp.com/')
 
       socket.on('connect', function () {
         socket.emit('hello', {
