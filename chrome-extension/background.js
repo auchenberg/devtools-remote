@@ -8,7 +8,7 @@
     var tab = sender.tab
     var screncastingInterval = null
 
-    if (message.cmd === 'requestDebugSocket') {
+    if (message.cmd === 'getDebugSocket') {
       console.log('debugger.attach', tab)
 
       var debuggee = {
