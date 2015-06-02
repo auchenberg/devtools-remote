@@ -10,6 +10,10 @@ This is an example of how [browser remote debugging](https://remotedebug.org) ca
 
 ![Example](https://github.com/auchenberg/browser-remote/raw/master/example.png)
 
+### How does it work?
+
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/flow.png)
+
 ### How to get started?
 To get started to need to have three pieces going:
 
@@ -31,9 +35,5 @@ To get started to need to have three pieces going:
 2. Find the ``devtoolsUrl`` property for the connected client
 3. Open the ``devtoolsUrl`` url in Chrome
 4. Bam!
-
-### How does it work?
-
-![explainer](https://github.com/auchenberg/browser-remote/raw/master/flow.png)
 
 **NOTICE**: This project is highly experimental, and shouldn't be used in ANY production-like environment, as there's absolutely no security or privacy.
