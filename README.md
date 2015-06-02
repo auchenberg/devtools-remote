@@ -32,5 +32,8 @@ To get started to need to have three pieces going:
 3. Open the ``devtoolsUrl`` url in Chrome
 4. Bam!
 
+### How does it work?
+
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/flow.png)
 
 **NOTICE**: This project is highly experimental, and shouldn't be used in ANY production-like environment, as there's absolutely no security or privacy.
