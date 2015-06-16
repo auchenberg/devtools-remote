@@ -4,15 +4,17 @@ BrowserRemote.
 
 Debug your user's browser remotely via Chrome DevTools.
 
-![explainer](https://github.com/auchenberg/browser-remote/raw/master/explainer.png)
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/explainer.jpg)
 
 This is an example of how [browser remote debugging](https://remotedebug.org) can be used to help customers having problems by enabling support agents to remote debug their browser.
 
-![Example](https://github.com/auchenberg/browser-remote/raw/master/example.png)
+I've written a blog post [Use Chrome DevTools to debug your user’s browser remotely with BrowserRemote.](https://kenneth.io/blog/2015/06/16/use-chrome-devtools-to-debug-your-users-browser-remotely-with-browserremote/), to provide some more examples and perspectives.
+
+![Example](https://github.com/auchenberg/browser-remote/raw/master/readme/example.jpg)
 
 ### How does it work?
 
-![explainer](https://github.com/auchenberg/browser-remote/raw/master/flow.png)
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/flow.png)
 
 ### How to get started?
 To get started to need to have three pieces going:
