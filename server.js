@@ -70,7 +70,7 @@ io.sockets.on('connection', function (socket) {
     targets[socket.id] = {
       description: '',
       devtoolsFrontendUrl: '/devtools/devtools.html?ws=' + webSocketUrl,
-      devtoolsUrl: 'chrome-devtools://devtools/bundled/devtools.html?ws=' + webSocketUrl + '&remoteFrontend=true',
+      devtoolsUrl: 'chrome-devtools://devtools/remote/serve_rev/@06a2e65a4f3610ec17dbc5988c0b16a95825240a/inspector.html?ws=' + webSocketUrl + '&remoteFrontend=true&dockSide=unlocked',
       id: socket.id,
       title: data.title,
       type: 'page',
