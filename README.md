@@ -4,7 +4,7 @@ DevToolsRemote
 
 Debug your user's browser remotely via Chrome DevTools.
 
-![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/explainer.jpg)
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/idea.png)
 
 This is an example of how [browser remote debugging](https://remotedebug.org) can be used to help customers having problems by enabling support agents to remote debug their browser.
 
