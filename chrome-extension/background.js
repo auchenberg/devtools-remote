@@ -20,7 +20,7 @@
       })
 
       // var socket = io.connect('http://localhost:8000/')
-      var socket = io.connect('https://browserremote.herokuapp.com/')
+      var socket = io.connect('https://devtools-remote.herokuapp.com/')
 
       socket.on('connect', function () {
         socket.emit('hello', {

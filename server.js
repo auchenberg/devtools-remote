@@ -3,6 +3,7 @@ var http = require('http')
 var WebSocketServer = require('ws').Server
 var logger = require('./logger')
 var io = require('socket.io')
+var guid = require('guid')
 
 var targets = {}
 var sockets = {}
@@ -18,11 +19,17 @@ app.set('port', process.env.PORT || 8000)
 app.get('/', function (req, res) {
   logger.info('http.index')
   res.json({
-    msg: 'BrowserRemote Gateway'
+    'msg': 'Hello from DevToolsRemote!',
+    'api': {
+      'post': 'http://' + (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/new',
+      'list': 'http://' + (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/:sessionId:/list'
+    }
   })
 })
 
-app.get('/json', function (req, res) {
+
+app.get('/_secret', function (req, res) {
+
   var formattedTargets = Object.keys(targets).map(function (key) {
     return targets[key]
   })
@@ -33,6 +40,34 @@ app.get('/json', function (req, res) {
 
   res.send(formattedTargets)
 })
+
+app.get('/:session/json', function (req, res) {
+
+  var sessionTargets = targets[req.params.session]
+
+  var formattedTargets = Object.keys(sessionTargets).map(function (key) {
+    return targets[key]
+  })
+
+  logger.info('http.targets', {
+    targets: formattedTargets
+  })
+
+  res.send(formattedTargets)
+})
+
+
+app.get('/new', function (req, res) {
+
+  var sessionId = guid.raw();
+
+  targets[sessionId] = {}
+
+  res.json({
+    sessionId: sessionId
+  })
+})
+
 
 var server = http.Server(app)
 
@@ -48,13 +83,10 @@ var io = require('socket.io')(server)
 io.sockets.on('connection', function (socket) {
   logger.info('socket.connection', socket.id)
 
-  targets[socket.id] = {}
   sockets[socket.id] = socket
 
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
-
-    delete targets[socket.id]
     delete sockets[socket.id]
   })
 
@@ -67,7 +99,8 @@ io.sockets.on('connection', function (socket) {
 
     var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id
 
-    targets[socket.id] = {
+    var sessionTargets = targets[data.sessionId]
+    sessionTargets[socket.id] = {
       description: '',
       devtoolsFrontendUrl: '/devtools/devtools.html?ws=' + webSocketUrl,
       devtoolsUrl: 'chrome-devtools://devtools/bundled/devtools.html?ws=' + webSocketUrl + '&remoteFrontend=true',
