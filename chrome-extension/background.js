@@ -68,7 +68,7 @@ app.socketconnect = function () {
 app.socketdisconnect = function(){
   console.log('socket.disconnect');
   getDebuggerTarget().then(target =>{
-    if (target.attached)
+    if (target && target.attached)
       chrome.debugger.detach(debuggee, _ => console.log('debugger.detached'))
   })
 };
@@ -125,7 +125,8 @@ app.getURL = function(){
         console.log('\t %c%s', "color: gray; font-size: 90%;", t.url);
         console.log('\t Inspection URL: %c%s', "color: blue;", t.devtoolsUrl);
 
-        app.copyToClipboard(t.devtoolsUrl);
+        if (t.url == tabRef.url)
+          app.copyToClipboard(t.devtoolsUrl);
       })
 
       //console.table(targets);
