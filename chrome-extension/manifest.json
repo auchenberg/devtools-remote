@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 2,
   "description": "",
-  "homepage_url": "https://remotedebug.org",
+  "homepage_url": "https://devtoolsremote.com",
   "browser_action": {
       "default_icon": "icons/icon128.png",
       "default_title": "DevTools-Remote"
