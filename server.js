@@ -70,7 +70,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('hello', function (data) {
     logger.info('socket.hello', data)
 
-    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + sessionId
+    var webSocketUrl = (process.env.WEBSOCKET_DOMAIN ? process.env.WEBSOCKET_DOMAIN : ('localhost:' + app.get('port'))) + '/devtools/page/' + sessionId
 
     targets[sessionId].push({
       description: '',
