@@ -185,7 +185,7 @@ app.onDebuggerEvent = function (source, method, params) {
 
 app.onDebuggerDetach = function (debuggee, reason) {
   console.log('debugger.detached', reason)
-  io.disconnect()
+  connection.disconnect()
 
   app.setBadgeText('clear')
   setTimeout(app.setBadgeText, 500)
