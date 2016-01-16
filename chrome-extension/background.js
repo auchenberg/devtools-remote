@@ -1,79 +1,76 @@
 /* global chrome io */
 
-// const server = 'https://devtools-remote.herokuapp.com/'
-const server = 'http://localhost:8000/'
+const server = 'https://devtools-remote.herokuapp.com/'
+// const server = 'http://localhost:8000/'
 
 var debuggee = {}
-var isAttached = false
 var app = {}
 var tabRef
 var socketRef
 
-var io = io(server, {
+var connection = io(server, {
   autoConnect: false
 })
 
-function resetSockets(tab){
+function resetSockets (tab) {
   tabRef = tab
   debuggee.tabId = tab.id
 
-  getDebuggerTarget().then( target => {
-
-    if (target.attached){
+  getDebuggerTarget().then(target => {
+    if (target.attached) {
       console.warn('debuggee.already attached')
       chrome.debugger.detach(debuggee)
     }
 
-    if (target.url.startsWith("chrome://")) {
-      return app.setBadgeText("ERR")
+    if (target.url.startsWith('chrome://')) {
+      return app.setBadgeText('ERR')
     }
 
-    app.setBadgeText("oo0")
+    app.setBadgeText('oo0')
     attachDebuggerAndSocket(debuggee, tab)
   })
 }
 
-function getDebuggerTarget(fn){
+function getDebuggerTarget (fn) {
   return new Promise((resolve, reject) =>
     chrome.debugger.getTargets(targetsArr => {
-      var arr = targetsArr.filter( t => t.tabId == debuggee.tabId)
+      var arr = targetsArr.filter(t => t.tabId === debuggee.tabId)
       resolve(arr && arr[0])
-    }));
-};
+    }))
+}
 
-function attachDebuggerAndSocket(debuggee, tab){
+function attachDebuggerAndSocket (debuggee, tab) {
   console.log('debugger.attach', tab)
   chrome.debugger.attach(debuggee, '1.1', function () {
     console.log('debugger.attached')
-    app.setBadgeText("o0o")
+    app.setBadgeText('o0o')
   })
 
-  if (io && io.connected){
+  if (connection && connection.connected) {
     console.log('socket.disconnecting previous socket')
-    io.disconnect()
+    connection.disconnect()
   }
   console.log('socket.connecting')
-  io.connect()
+  connection.connect()
 }
-
 
 // socket-side
 app.onSocketConnect = function () {
-  console.log('socket.connect');
-  app.setBadgeText("0oo");
+  console.log('socket.connect')
+  app.setBadgeText('0oo')
   socketRef = this
 
-  this.on('data.request', app.onSocketDataRequest);
-  this.on('sessionCreated', app.onSessionCreated);
+  this.on('data.request', app.onSocketDataRequest)
+  this.on('sessionCreated', app.onSessionCreated)
 
   this.emit('hello', {
     title: tabRef.title,
     url: tabRef.url,
     userAgent: navigator.userAgent
   })
-};
+}
 
-app.onSocketDisconnect = function() {
+app.onSocketDisconnect = function () {
   console.log('socket.disconnect')
 
   this.off('data.request')
@@ -81,12 +78,12 @@ app.onSocketDisconnect = function() {
 
   socketRef = null
 
-  getDebuggerTarget().then(target =>{
+  getDebuggerTarget().then(target => {
     if (target && target.attached) {
       chrome.debugger.detach(debuggee, _ => console.log('debugger.detached'))
     }
   })
-};
+}
 
 app.onSocketDataRequest = function (data) {
   console.log('socket.data.request', data.id, data)
@@ -114,19 +111,16 @@ app.onSocketDataRequest = function (data) {
     console.log('socket.data.response', reply.id, reply)
     this.emit('data.response', reply)
   }.bind(this))
-};
+}
 
-app.getURL = function(sessionId){
+app.getURL = function (sessionId) {
+  app.setBadgeText('ooo')
 
-  app.setBadgeText("ooo")
-
-  fetch(server + sessionId + '/json')
-    .then( r => r.json())
-    .then( targets => {
-
-      console.log('Inspectable targets on ', server, ':');
-
-      targets.forEach( t => {
+  window.fetch(server + sessionId + '/json')
+    .then(r => r.json())
+    .then(targets => {
+      console.log('Inspectable targets on ', server, ':')
+      targets.forEach(t => {
         /* t looks like: {
           description: "",
           devtoolsFrontendUrl: "/devtools/devtools.html?ws=devtoolsremote.com/devtools/page/lQOtx1HAAC",
@@ -138,41 +132,47 @@ app.getURL = function(sessionId){
           webSocketDebuggerUrl: "ws://devtoolsremote.com/devtools/page/lQOtx1HAAC"
         } */
 
-        console.log('%c%s', "font-weight: bold;", t.title);
-        console.log('\t %c%s', "color: gray; font-size: 90%;", t.url);
-        console.log('\t Inspection URL: %c%s', "color: blue;", t.devtoolsUrl);
+        console.log('%c%s', 'font-weight: bold;', t.title)
+        console.log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
+        console.log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
 
-        if (t.url == tabRef.url)
-          app.copyToClipboard(t.devtoolsUrl);
+        if (t.url === tabRef.url) {
+          app.copyToClipboard(t.devtoolsUrl)
+        }
       })
-    });
-};
+    })
+}
 
-io.on('connect', app.onSocketConnect)
-io.on('disconnect', app.onSocketDisconnect);
+connection.on('connect', app.onSocketConnect)
+connection.on('disconnect', app.onSocketDisconnect)
 
-app.copyToClipboard = function(text){
-    var input = document.createElement('input');
-    document.body.appendChild(input);
-    input.value = text;
-    input.focus();
-    input.select();
-    document.execCommand('copy');
-    input.remove();
+app.copyToClipboard = function (text) {
+  var input = document.createElement('input')
+  document.body.appendChild(input)
+  input.value = text
+  input.focus()
+  input.select()
+  document.execCommand('copy')
+  input.remove()
 
-    app.setBadgeText("copied")
-    setTimeout(app.setBadgeText, 600);
+  app.setBadgeText('copied')
+  setTimeout(app.setBadgeText, 600)
 }
 
 // chrome-side
-app.onBrowserAction = function(tab){
-  app.setBadgeText("ooo")
-  resetSockets(tab);
-};
+app.onBrowserAction = function (tab) {
+  app.setBadgeText('ooo')
+  resetSockets(tab)
+}
 
-app.setBadgeText = function(text){
-  chrome.browserAction.setBadgeBackgroundColor({color: text == "ERR" ? 'red' : '#5CC77D'});
-  chrome.browserAction.setBadgeText({text: text || ""});
+app.setBadgeText = function (text) {
+  chrome.browserAction.setBadgeBackgroundColor({
+    color: text === 'ERR' ? 'red' : '#5CC77D'
+  })
+
+  chrome.browserAction.setBadgeText({
+    text: text || ''
+  })
 }
 
 app.onDebuggerEvent = function (source, method, params) {
@@ -181,23 +181,22 @@ app.onDebuggerEvent = function (source, method, params) {
     method: method,
     params: params
   })
-};
+}
 
 app.onDebuggerDetach = function (debuggee, reason) {
   console.log('debugger.detached', reason)
   io.disconnect()
 
-  app.setBadgeText("clear")
-  setTimeout(app.setBadgeText, 500);
-};
+  app.setBadgeText('clear')
+  setTimeout(app.setBadgeText, 500)
+}
 
-app.onSessionCreated = function(sessionId) {
+app.onSessionCreated = function (sessionId) {
   console.log('sessionId', sessionId)
   app.getURL(sessionId)
 }
 
-chrome.browserAction.onClicked.addListener(app.onBrowserAction);
-chrome.runtime.onMessage.addListener(app.onRuntimeMessage);
+chrome.browserAction.onClicked.addListener(app.onBrowserAction)
+chrome.runtime.onMessage.addListener(app.onRuntimeMessage)
 chrome.debugger.onEvent.addListener(app.onDebuggerEvent)
 chrome.debugger.onDetach.addListener(app.onDebuggerDetach)
-
