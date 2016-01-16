@@ -4,17 +4,10 @@
   "manifest_version": 2,
   "description": "",
   "homepage_url": "https://remotedebug.org",
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "run_at": "document_idle"
-    }
-  ],
+  "browser_action": {
+      "default_icon": "icons/icon128.png",
+      "default_title": "DevTools-Remote"
+   },
   "background": {
     "page": "background.html"
   },
@@ -23,12 +16,13 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },    
+  },
   "content_security_policy": "script-src 'self' https://cdn.socket.io; object-src 'self'",
   "permissions": [
     "tabs",
     "activeTab",
     "debugger",
+    "clipboardWrite",
     "<all_urls>"
   ]
 }
