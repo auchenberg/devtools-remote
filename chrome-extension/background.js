@@ -1,6 +1,6 @@
 /* global chrome io */
 
-const server = 'https://devtools-remote.herokuapp.com/'
+const server = 'https://devtoolsremote.com/'
 // const server = 'http://localhost:8000/'
 
 var debuggee = {}
