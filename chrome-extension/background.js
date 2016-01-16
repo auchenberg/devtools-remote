@@ -1,39 +1,43 @@
 /* global chrome io */
 
-const server = 'https://devtools-remote.herokuapp.com/'
-//const server = 'http://localhost:8000/'
+// const server = 'https://devtools-remote.herokuapp.com/'
+const server = 'http://localhost:8000/'
 
+var debuggee = {}
+var isAttached = false
+var app = {}
+var tabRef
+var socketRef
 
-var debuggee = {};
-var isAttached = false;
-var socket = io(server, { autoConnect: false });
-var app = {};
-var tabRef;
+var io = io(server, {
+  autoConnect: false
+})
 
 function resetSockets(tab){
-  tabRef = tab;
-  debuggee.tabId = tab.id;
+  tabRef = tab
+  debuggee.tabId = tab.id
 
   getDebuggerTarget().then( target => {
 
     if (target.attached){
       console.warn('debuggee.already attached')
-      chrome.debugger.detach(debuggee);
+      chrome.debugger.detach(debuggee)
     }
 
-    if (target.url.startsWith("chrome://"))
-      return app.setBadgeText("ERR");
+    if (target.url.startsWith("chrome://")) {
+      return app.setBadgeText("ERR")
+    }
 
     app.setBadgeText("oo0")
     attachDebuggerAndSocket(debuggee, tab)
-  });
+  })
 }
 
 function getDebuggerTarget(fn){
   return new Promise((resolve, reject) =>
     chrome.debugger.getTargets(targetsArr => {
-      var arr = targetsArr.filter( t => t.tabId == debuggee.tabId);
-      resolve(arr && arr[0]);
+      var arr = targetsArr.filter( t => t.tabId == debuggee.tabId)
+      resolve(arr && arr[0])
     }));
 };
 
@@ -41,48 +45,61 @@ function attachDebuggerAndSocket(debuggee, tab){
   console.log('debugger.attach', tab)
   chrome.debugger.attach(debuggee, '1.1', function () {
     console.log('debugger.attached')
-    app.setBadgeText("o0o");
+    app.setBadgeText("o0o")
   })
 
-  if (socket && socket.connected){
+  if (io && io.connected){
     console.log('socket.disconnecting previous socket')
-    socket.disconnect();
+    io.disconnect()
   }
   console.log('socket.connecting')
-  socket.connect();
+  io.connect()
 }
 
 
 // socket-side
-app.socketconnect = function () {
+app.onSocketConnect = function () {
   console.log('socket.connect');
   app.setBadgeText("0oo");
-  socket.emit('hello', {
+  socketRef = this
+
+  this.on('data.request', app.onSocketDataRequest);
+  this.on('sessionCreated', app.onSessionCreated);
+
+  this.emit('hello', {
     title: tabRef.title,
     url: tabRef.url,
     userAgent: navigator.userAgent
   })
-  setTimeout(app.getURL, 100);
 };
 
-app.socketdisconnect = function(){
-  console.log('socket.disconnect');
+app.onSocketDisconnect = function() {
+  console.log('socket.disconnect')
+
+  this.off('data.request')
+  this.off('sessionCreated')
+
+  socketRef = null
+
   getDebuggerTarget().then(target =>{
-    if (target && target.attached)
+    if (target && target.attached) {
       chrome.debugger.detach(debuggee, _ => console.log('debugger.detached'))
+    }
   })
 };
 
-app.socketdatarequest = function (data) {
+app.onSocketDataRequest = function (data) {
   console.log('socket.data.request', data.id, data)
 
   if (data.method === 'Page.canScreencast') {
     var reply = {
       id: data.id,
-      result: { result: true }
+      result: {
+        result: true
+      }
     }
 
-    socket.emit('data.response', reply)
+    this.emit('data.response', reply)
     return
   }
 
@@ -95,15 +112,15 @@ app.socketdatarequest = function (data) {
     }
 
     console.log('socket.data.response', reply.id, reply)
-    socket.emit('data.response', reply)
-  })
+    this.emit('data.response', reply)
+  }.bind(this))
 };
 
-app.getURL = function(){
+app.getURL = function(sessionId){
 
   app.setBadgeText("ooo")
 
-  fetch(server + 'json')
+  fetch(server + sessionId + '/json')
     .then( r => r.json())
     .then( targets => {
 
@@ -128,16 +145,11 @@ app.getURL = function(){
         if (t.url == tabRef.url)
           app.copyToClipboard(t.devtoolsUrl);
       })
-
-      //console.table(targets);
     });
 };
 
-socket.on('connect', app.socketconnect)
-socket.on('disconnect', app.socketdisconnect);
-socket.on('data.request', app.socketdatarequest);
-
-
+io.on('connect', app.onSocketConnect)
+io.on('disconnect', app.onSocketDisconnect);
 
 app.copyToClipboard = function(text){
     var input = document.createElement('input');
@@ -165,7 +177,7 @@ app.setBadgeText = function(text){
 
 app.onDebuggerEvent = function (source, method, params) {
   console.log('debugger.event.recieved', source, method, params)
-  socket.emit('data.event', {
+  socketRef.emit('data.event', {
     method: method,
     params: params
   })
@@ -173,12 +185,16 @@ app.onDebuggerEvent = function (source, method, params) {
 
 app.onDebuggerDetach = function (debuggee, reason) {
   console.log('debugger.detached', reason)
-  socket.disconnect()
+  io.disconnect()
 
   app.setBadgeText("clear")
   setTimeout(app.setBadgeText, 500);
 };
 
+app.onSessionCreated = function(sessionId) {
+  console.log('sessionId', sessionId)
+  app.getURL(sessionId)
+}
 
 chrome.browserAction.onClicked.addListener(app.onBrowserAction);
 chrome.runtime.onMessage.addListener(app.onRuntimeMessage);
