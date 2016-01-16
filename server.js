@@ -16,6 +16,8 @@ logger.info('http.booting')
 var app = express()
 app.set('port', process.env.PORT || 8000)
 
+app.use(express.static('web'));
+
 app.get('/', function (req, res) {
   logger.info('http.index')
   res.json({
