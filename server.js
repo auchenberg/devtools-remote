@@ -3,6 +3,7 @@ var http = require('http')
 var WebSocketServer = require('ws').Server
 var logger = require('./logger')
 var io = require('socket.io')
+var uuid = require('node-uuid')
 
 var targets = {}
 var sockets = {}
@@ -22,16 +23,16 @@ app.get('/', function (req, res) {
   })
 })
 
-app.get('/json', function (req, res) {
-  var formattedTargets = Object.keys(targets).map(function (key) {
-    return targets[key]
-  })
+app.get('/:session/json', function (req, res) {
+
+  var sessionId = req.params.session
+  var sessionTargets = targets[sessionId]
 
   logger.info('http.targets', {
-    targets: formattedTargets
+    targets: sessionTargets
   })
 
-  res.send(formattedTargets)
+  res.send(sessionTargets)
 })
 
 var server = http.Server(app)
@@ -46,16 +47,18 @@ logger.info('socket.booting')
 
 var io = require('socket.io')(server)
 io.sockets.on('connection', function (socket) {
-  logger.info('socket.connection', socket.id)
+  var sessionId = uuid()
 
-  targets[socket.id] = {}
-  sockets[socket.id] = socket
+  logger.info('socket.connection', sessionId)
+
+  targets[sessionId] = []
+  sockets[sessionId] = socket
 
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
 
-    delete targets[socket.id]
-    delete sockets[socket.id]
+    delete targets[sessionId]
+    delete sockets[sessionId]
   })
 
   socket.on('error', function (err) {
@@ -65,18 +68,21 @@ io.sockets.on('connection', function (socket) {
   socket.on('hello', function (data) {
     logger.info('socket.hello', data)
 
-    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + socket.id
+    var webSocketUrl = (process.env.HEROKU_URL ? process.env.HEROKU_URL : ('localhost:' + app.get('port'))) + '/devtools/page/' + sessionId
 
-    targets[socket.id] = {
+    targets[sessionId].push({
       description: '',
       devtoolsFrontendUrl: '/devtools/devtools.html?ws=' + webSocketUrl,
       devtoolsUrl: 'chrome-devtools://devtools/remote/serve_rev/@06a2e65a4f3610ec17dbc5988c0b16a95825240a/inspector.html?ws=' + webSocketUrl + '&remoteFrontend=true&dockSide=unlocked',
-      id: socket.id,
+      id: uuid(),
       title: data.title,
       type: 'page',
       url: data.url,
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
-    }
+    })
+
+    socket.emit('sessionCreated', sessionId)
+
   })
 })
 
