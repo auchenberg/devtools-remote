@@ -3858,6 +3858,23 @@
 				margin-bottom: 0;
 			}
 
+			#header .content .sharing {
+				display: flex;
+				justify-content: flex-end;
+			}
+
+			#header .content .sharing iframe:first-child {
+				width: 90px;
+			}
+
+			#header .content .sharing iframe {
+				margin-right: 10px;
+			}
+
+			#header .content .sharing iframe:last-child {
+				margin-right: 0;
+			}
+
 		#header .image {
 			-moz-transition: opacity 1s ease, -moz-transform 1s ease;
 			-webkit-transition: opacity 1s ease, -webkit-transform 1s ease;
