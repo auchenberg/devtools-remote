@@ -11,11 +11,11 @@ so it can be debugged remotely via Chrome DevTools.
 
 ### How does it work?
 
-![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/flow.png)
-
 1. A simple gateway that acts like a proxy between Chrome and Chrome DevTools.
 2. The user need to install a little extension to allow access to Chrome debugger, and to connect to the gateway.
 3. The agent needs to open the dashboard to connect Chrome DevTools to the user.
+
+![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/flow.png)
 
 A full detailed blog post can be found here [https://kenneth.io/blog/2015/06/16/use-chrome-devtools-to-debug-your-users-browser-remotely-with-browserremote/](https://kenneth.io/blog/2015/06/16/use-chrome-devtools-to-debug-your-users-browser-remotely-with-browserremote/)
 
