@@ -13,7 +13,7 @@ so it can be debugged remotely via Chrome DevTools.
 
 1. A simple gateway that acts like a proxy between Chrome and Chrome DevTools.
 2. The user need to install a little extension to allow access to Chrome debugger, and to connect to the gateway.
-3. The agent needs to open the dashboard to connect Chrome DevTools to the user.
+3. A unique link is generated that connects the browser and the DevTool over a WebSocket connection.
 
 ![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/flow.png)
 
