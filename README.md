@@ -2,9 +2,9 @@ DevTools Remote
 ================
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Debug your user's browser remotely via Chrome DevTools.
+![Logo](https://github.com/auchenberg/browser-remote/raw/master/readme/logo.png)
 
-![Example](https://github.com/auchenberg/browser-remote/raw/master/readme/logo.png)
+Debug your user's browser remotely via Chrome DevTools.
 
 DevTools Remote enables you to share access to a browser tab,
 so it can be debugged remotely via Chrome DevTools.
