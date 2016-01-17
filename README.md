@@ -21,4 +21,4 @@ A full detailed blog post can be found here [https://kenneth.io/blog/2015/06/16/
 
 ### Security
 
-**NOTICE**: This project is highly experimental, and shouldn't be used in ANY production-like environment, as there's absolutely no security or privacy.
+**NOTICE**: This project is highly experimental, and shouldn't be used in ANY production-like environment, as there's little security provided by a uniquely generated session. This session can in theory be guessed, and therefore allow a third party to tag along.
