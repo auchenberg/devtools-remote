@@ -25,6 +25,16 @@ app.get('/', function (req, res) {
   })
 })
 
+app.get('/_stats', function (req, res) {
+  logger.info('http.stats')
+  res.json({
+    count: {
+      targets: Object.keys(targets).length,
+      sockets: Object.keys(sockets).length
+    }
+  })
+})
+
 app.get('/:session/json', function (req, res) {
 
   var sessionId = req.params.session
