@@ -23,8 +23,9 @@
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
 
-			$('.get-extension').on('click', function() {
+			$('.get-extension').on('click', function(e) {
 				chrome.webstore.install()
+				e.preventDefault()
 			})
 
 			$window.on('load', function() {
