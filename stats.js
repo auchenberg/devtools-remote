@@ -1,5 +1,8 @@
 var request = require('request')
 var fs = require('fs')
+var Mixpanel = require('mixpanel')
+
+var mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
 console.log('stats.start')
 
@@ -10,16 +13,13 @@ request('http://devtoolsremote.com/_stats', function(err, response, body) {
 	}
 
 	var body = JSON.parse(body)
-	var line = '' + Date.now() + ',' + body.count.targets + ',' + body.count.sockets + '\n'
 
-	console.log('stats.line', line)
+	console.log('sockets_concurrent', body.count.sockets)
+	console.log('sessions_concurrent', body.count.targets)
 
-	fs.appendFile('web/_stats.txt', line, encoding='utf8', function (err) {
-		if (err) {
-			console.log('err', err)
-			throw err
-		}
-	})
+	mixpanel.track('sockets_concurrent', body.count.sockets)
+	mixpanel.track('sessions_concurrent', body.count.targets)
+
 })
 
 console.log('stats.end')

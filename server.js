@@ -1,12 +1,15 @@
 var express = require('express')
 var http = require('http')
 var WebSocketServer = require('ws').Server
+var Mixpanel = require('mixpanel')
+
 var logger = require('./logger')
 var io = require('socket.io')
 var uuid = require('node-uuid')
 
 var targets = {}
 var sockets = {}
+var mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN)
 
 logger.info('server.booting')
 
@@ -92,6 +95,8 @@ io.sockets.on('connection', function (socket) {
       url: data.url,
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
     })
+
+    mixpanel.track("sessions_created");
 
     socket.emit('sessionCreated', sessionId)
 
