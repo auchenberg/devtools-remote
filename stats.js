@@ -1,6 +1,8 @@
 var request = require('request')
 var fs = require('fs')
 
+console.log('stats.start')
+
 request('http://devtoolsremote.com/_stats', function(err, response, body) {
 	if (err) {
 		console.log('err', err)
@@ -19,3 +21,5 @@ request('http://devtoolsremote.com/_stats', function(err, response, body) {
 		}
 	})
 })
+
+console.log('stats.end')
