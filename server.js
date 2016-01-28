@@ -77,6 +77,17 @@ io.sockets.on('connection', function (socket) {
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
 
+    var session = sessions[sessionId]
+    var endTime = new Date.getTime()
+    var duration = endTime - sesssion.startTime
+
+    mixpanel.track('session_ended', {
+      sessionId: sessionId,
+      endTime: endTime,
+      startTime: session.startTime,
+      duration: duration
+    })
+
     mixpanel.track("sessions_duration", {
       sessionId: sessionId
     })
