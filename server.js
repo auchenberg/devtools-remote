@@ -102,7 +102,9 @@ io.sockets.on('connection', function (socket) {
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
     })
 
-    mixpanel.track("sessions_created");
+    mixpanel.track("sessions_created", {
+      sessionId: sessionId
+    });
 
     socket.emit('sessionCreated', sessionId)
 
