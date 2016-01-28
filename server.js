@@ -116,7 +116,6 @@ io.sockets.on('connection', function (socket) {
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
     })
 
-    mixpanel.time_event('sessions_duration')
     mixpanel.track('sessions_created', {
       sessionId: sessionId
     })
