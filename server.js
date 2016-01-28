@@ -77,6 +77,10 @@ io.sockets.on('connection', function (socket) {
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
 
+    mixpanel.track("sessions_duration", {
+      sessionId: sessionId
+    })
+
     delete targets[sessionId]
     delete sockets[sessionId]
     delete sessions[sessionId]
@@ -102,6 +106,7 @@ io.sockets.on('connection', function (socket) {
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
     })
 
+    mixpanel.time_event("sessions_duration");
     mixpanel.track("sessions_created", {
       sessionId: sessionId
     });
