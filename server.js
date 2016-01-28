@@ -9,6 +9,7 @@ var uuid = require('node-uuid')
 
 var targets = {}
 var sockets = {}
+var sessions = {}
 var mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN)
 
 logger.info('server.booting')
@@ -68,12 +69,16 @@ io.sockets.on('connection', function (socket) {
 
   targets[sessionId] = []
   sockets[sessionId] = socket
+  sessions[sessionId] = {
+    startTime: new Date.getTime()
+  }
 
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
 
     delete targets[sessionId]
     delete sockets[sessionId]
+    delete sessions[sessionId]
   })
 
   socket.on('error', function (err) {
