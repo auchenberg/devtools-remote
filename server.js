@@ -4,7 +4,6 @@ var WebSocketServer = require('ws').Server
 var Mixpanel = require('mixpanel')
 
 var logger = require('./logger')
-var io = require('socket.io')
 var uuid = require('node-uuid')
 
 var targets = {}
@@ -20,7 +19,7 @@ logger.info('http.booting')
 var app = express()
 app.set('port', process.env.PORT || 8000)
 
-app.use(express.static('web'));
+app.use(express.static('web'))
 
 app.get('/', function (req, res) {
   logger.info('http.index')
@@ -41,7 +40,6 @@ app.get('/_stats', function (req, res) {
 })
 
 app.get('/:session/json', function (req, res) {
-
   var sessionId = req.params.session
   var sessionTargets = targets[sessionId]
 
@@ -71,15 +69,15 @@ io.sockets.on('connection', function (socket) {
   targets[sessionId] = []
   sockets[sessionId] = socket
   sessions[sessionId] = {
-    startTime: new Date.getTime()
+    startTime: new Date().getTime()
   }
 
   socket.on('disconnect', function () {
     logger.info('socket.disconnect')
 
     var session = sessions[sessionId]
-    var endTime = new Date.getTime()
-    var duration = endTime - sesssion.startTime
+    var endTime = new Date().getTime()
+    var duration = endTime - session.startTime
 
     mixpanel.track('session_ended', {
       sessionId: sessionId,
@@ -88,7 +86,7 @@ io.sockets.on('connection', function (socket) {
       duration: duration
     })
 
-    mixpanel.track("sessions_duration", {
+    mixpanel.track('sessions_duration', {
       sessionId: sessionId
     })
 
@@ -117,13 +115,12 @@ io.sockets.on('connection', function (socket) {
       webSocketDebuggerUrl: 'ws://' + webSocketUrl
     })
 
-    mixpanel.time_event("sessions_duration");
-    mixpanel.track("sessions_created", {
+    mixpanel.time_event('sessions_duration')
+    mixpanel.track('sessions_created', {
       sessionId: sessionId
-    });
+    })
 
     socket.emit('sessionCreated', sessionId)
-
   })
 })
 
@@ -186,5 +183,4 @@ ws.on('connection', function (connection) {
     var message = JSON.parse(data)
     socket.emit('data.request', message)
   })
-
 })
