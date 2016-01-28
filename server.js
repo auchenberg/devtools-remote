@@ -34,7 +34,8 @@ app.get('/_stats', function (req, res) {
   res.json({
     count: {
       targets: Object.keys(targets).length,
-      sockets: Object.keys(sockets).length
+      sockets: Object.keys(sockets).length,
+      sessions: Object.keys(sessions).length
     }
   })
 })
