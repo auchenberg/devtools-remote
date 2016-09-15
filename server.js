@@ -108,7 +108,7 @@ io.sockets.on('connection', function (socket) {
     targets[sessionId].push({
       description: '',
       devtoolsFrontendUrl: '/devtools/devtools.html?ws=' + webSocketUrl,
-      devtoolsUrl: 'chrome-devtools://devtools/remote/serve_rev/@06a2e65a4f3610ec17dbc5988c0b16a95825240a/inspector.html?ws=' + webSocketUrl + '&remoteFrontend=true&dockSide=unlocked',
+      devtoolsUrl: 'chrome-devtools://devtools/remote/serve_rev/@d19c087b9bfdf76a8af91e2f0a0e791bf2ffcafa/inspector.html?ws=' + webSocketUrl + '&remoteFrontend=true&dockSide=unlocked&experiments=true',
       id: uuid(),
       title: data.title,
       type: 'page',
@@ -180,7 +180,12 @@ ws.on('connection', function (connection) {
   connection.on('message', function (data) {
     logger.info('websocket.message')
 
-    var message = JSON.parse(data)
+    var message;
+    try {
+      message = JSON.parse(data);
+    } catch (e) { }
+
+    if (!message) return;
     socket.emit('data.request', message)
   })
 })
