@@ -1,6 +1,6 @@
 /* global chrome io */
 
-const server = 'https://devtoolsremote.com/'
+const server = 'https://remote.devtools.rocks/'
 // const server = 'http://localhost:8000/'
 
 var debuggee = {}
