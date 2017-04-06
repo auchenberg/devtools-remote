@@ -5,7 +5,7 @@ var mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
 // STATS
 function reportStats () {
-  logger.log('reportStats.start')
+  console.log('reportStats.start')
 
   request('https://remote.devtools.rocks/_stats', function (err, response, body) {
     if (err) {
@@ -22,9 +22,12 @@ function reportStats () {
     mixpanel.track('sockets_concurrent', body.count.sockets)
     mixpanel.track('sessions_concurrent', body.count.sessions)
     mixpanel.track('targets_concurrent', body.count.targets)
+
+    console.log('reportStats.end')
   })
 
-  logger.log('reportStats.end')
 }
+
+reportStats();
 
 setInterval(reportStats, 300000) // Run every 5 minute
