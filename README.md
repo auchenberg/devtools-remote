@@ -12,8 +12,8 @@ so it can be debugged remotely via Chrome DevTools.
 ### How does it work?
 
 1. A simple gateway that acts like a proxy between Chrome and Chrome DevTools.
-2. The user need to install a little extension to allow access to Chrome debugger, and to connect to the gateway.
-3. A unique link is generated that connects the browser and the DevTool over a WebSocket connection.
+2. The user needs to install a little extension to allow access to Chrome debugger, and to connect to the gateway.
+3. A unique link is generated that connects the browser and DevTools over a WebSocket connection.
 
 ![explainer](https://github.com/auchenberg/browser-remote/raw/master/readme/flow.png)
 
